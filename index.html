@@ -479,33 +479,93 @@
             transform: scale(1.05);
         }
 
-        .gallery-section {
+        .interactive-section {
             padding: 5rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
         }
 
-        .gallery-grid {
+        .interactive-grid {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
+            gap: 2rem;
         }
 
-        .gallery-item {
-            aspect-ratio: 16/9;
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.2), rgba(0, 31, 63, 0.4));
-            border-radius: 10px;
+        .interactive-card {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(0, 31, 63, 0.4));
+            padding: 2rem;
+            border-radius: 15px;
             border: 2px solid var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
+            text-align: center;
             transition: transform 0.3s;
-            cursor: pointer;
         }
 
-        .gallery-item:hover {
-            transform: scale(1.05);
+        .interactive-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .interactive-card h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .interactive-card p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        #quiz-container, #builder-container, #badge-container, #simulator-container {
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        #quiz-container div, #builder-container div {
+            margin-bottom: 1rem;
+        }
+
+        #options button {
+            display: block;
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            background: rgba(74, 144, 226, 0.2);
+            border: 1px solid var(--accent);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        #options button:hover {
+            background: var(--accent);
+        }
+
+        #builder-container textarea, #builder-container input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--accent);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        #badge-container select, #badge-container input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--accent);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        #resolution-output, #debate-output {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            white-space: pre-wrap;
         }
 
         footer {
@@ -585,6 +645,7 @@
                 <li><a href="#board">Executive Board</a></li>
                 <li><a href="#awards">Awards</a></li>
                 <li><a href="#secretariat">Secretariat</a></li>
+                <li><a href="#interactive">Interactive Hub</a></li>
             </ul>
         </div>
     </nav>
@@ -815,15 +876,73 @@
         </div>
     </section>
 
-    <section class="gallery-section">
-        <h2 class="section-title">Conference Moments</h2>
-        <div class="gallery-grid">
-            <div class="gallery-item">📸</div>
-            <div class="gallery-item">🎤</div>
-            <div class="gallery-item">🌍</div>
-            <div class="gallery-item">🏆</div>
-            <div class="gallery-item">📰</div>
-            <div class="gallery-item">🤝</div>
+    <section class="interactive-section" id="interactive">
+        <h2 class="section-title">Interactive MUN Hub</h2>
+        <div class="interactive-grid">
+            <div class="interactive-card" id="quiz-card">
+                <h3>MUN Knowledge Quiz</h3>
+                <p>Test your Model UN knowledge with our interactive quiz featuring questions on procedures, history, and current affairs.</p>
+                <button class="cta-button" onclick="startQuiz()">Start Quiz</button>
+                <div id="quiz-container" style="display: none;">
+                    <div id="question"></div>
+                    <div id="options"></div>
+                    <button id="next-btn" onclick="nextQuestion()">Next</button>
+                    <div id="score"></div>
+                </div>
+            </div>
+            <div class="interactive-card" id="builder-card">
+                <h3>Resolution Builder</h3>
+                <p>Craft your own UN resolution with our guided tool. Learn the structure and create impactful diplomatic documents.</p>
+                <button class="cta-button" onclick="openBuilder()">Build Resolution</button>
+                <div id="builder-container" style="display: none;">
+                    <input type="text" id="res-title" placeholder="Resolution Title">
+                    <textarea id="preamble" placeholder="Preamble (e.g., Recalling, Noting, etc.)"></textarea>
+                    <textarea id="operative" placeholder="Operative Clauses (e.g., 1. Decides, 2. Requests, etc.)"></textarea>
+                    <button onclick="generateResolution()">Generate Resolution</button>
+                    <div id="resolution-output"></div>
+                </div>
+            </div>
+            <div class="interactive-card" id="badge-card">
+                <h3>Delegate Badge Creator</h3>
+                <p>Design your personalized delegate badge for the conference. Choose your country, committee, and style!</p>
+                <button class="cta-button" onclick="openBadgeCreator()">Create Badge</button>
+                <div id="badge-container" style="display: none;">
+                    <input type="text" id="delegate-name" placeholder="Your Name">
+                    <select id="country-select">
+                        <option>Select Country</option>
+                        <option>USA</option>
+                        <option>China</option>
+                        <option>Russia</option>
+                        <option>India</option>
+                        <option>France</option>
+                        <option>Germany</option>
+                    </select>
+                    <select id="committee-select">
+                        <option>Select Committee</option>
+                        <option>UNGA-DISEC</option>
+                        <option>UNHRC</option>
+                        <option>Lok Sabha</option>
+                        <option>International Press</option>
+                    </select>
+                    <button onclick="generateBadge()">Generate Badge</button>
+                    <canvas id="badge-canvas" width="300" height="400"></canvas>
+                </div>
+            </div>
+            <div class="interactive-card" id="simulator-card">
+                <h3>Debate Simulator</h3>
+                <p>Experience a virtual debate session. Choose your stance and engage in diplomatic discourse.</p>
+                <button class="cta-button" onclick="startSimulator()">Enter Simulator</button>
+                <div id="simulator-container" style="display: none;">
+                    <div id="debate-topic">Topic: Should AI be regulated internationally?</div>
+                    <div id="stance-options">
+                        <button onclick="chooseStance('for')">For</button>
+                        <button onclick="chooseStance('against')">Against</button>
+                    </div>
+                    <div id="debate-output"></div>
+                    <input type="text" id="user-argument" placeholder="Enter your argument">
+                    <button onclick="submitArgument()">Submit</button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -832,6 +951,7 @@
         <p>"Peace begins with us"</p>
         <p style="margin-top: 2rem; opacity: 0.7;">Bal Bharati Public School, GRH Marg</p>
         <p style="opacity: 0.7;">15th Edition | 8-9 October 2024</p>
+        <p style="margin-top: 1rem; opacity: 0.5; font-size: 0.9rem;">Made with love by Dheirya Kharbanda</p>
     </footer>
 
     <script>
@@ -852,3 +972,246 @@
                 y: Math.random() * canvas.height,
                 vx: (Math.random() - 0.5) * 0.5,
                 vy: (Math.random() - 0.5) * 0.5,
+                size: Math.random() * 2 + 1
+            });
+        }
+
+        let rotation = 0;
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            rotation += 0.005;
+            
+            // Draw globe
+            let centerX = canvas.width / 2;
+            let centerY = canvas.height / 2;
+            let radius = Math.min(canvas.width, canvas.height) / 4;
+            
+            // Globe background with 3D effect
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.rotate(rotation);
+            
+            // Create gradient for 3D effect
+            let gradient = ctx.createRadialGradient(0, -radius/2, 0, 0, 0, radius);
+            gradient.addColorStop(0, 'rgba(74, 144, 226, 0.8)');
+            gradient.addColorStop(0.7, 'rgba(74, 144, 226, 0.3)');
+            gradient.addColorStop(1, 'rgba(0, 31, 63, 0.1)');
+            
+            ctx.beginPath();
+            ctx.arc(0, 0, radius, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // Add shadow for 3D effect
+            ctx.beginPath();
+            ctx.arc(0, radius/3, radius * 0.8, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fill();
+            
+            // Continents (simplified, rotating with globe)
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            // North America
+            ctx.beginPath();
+            ctx.arc(-radius * 0.3, -radius * 0.2, radius * 0.15, 0, Math.PI * 2);
+            ctx.fill();
+            // Europe
+            ctx.beginPath();
+            ctx.arc(radius * 0.1, -radius * 0.3, radius * 0.1, 0, Math.PI * 2);
+            ctx.fill();
+            // Asia
+            ctx.beginPath();
+            ctx.arc(radius * 0.4, -radius * 0.1, radius * 0.2, 0, Math.PI * 2);
+            ctx.fill();
+            // Africa
+            ctx.beginPath();
+            ctx.arc(radius * 0.1, radius * 0.2, radius * 0.12, 0, Math.PI * 2);
+            ctx.fill();
+            // South America
+            ctx.beginPath();
+            ctx.arc(-radius * 0.2, radius * 0.3, radius * 0.1, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.restore();
+            
+            // 3D Particles orbiting the globe
+            particles.forEach((p, index) => {
+                // Calculate 3D position
+                let angle = (index / particles.length) * Math.PI * 2 + rotation * 2;
+                let distance = radius + 50 + Math.sin(Date.now() * 0.001 + index) * 20;
+                let height = Math.cos(Date.now() * 0.002 + index) * 30;
+                
+                // Project 3D to 2D
+                let x = centerX + Math.cos(angle) * distance;
+                let y = centerY + Math.sin(angle) * distance + height;
+                
+                // Size based on distance (perspective)
+                let size = p.size * (1 - Math.abs(height) / 50);
+                
+                ctx.beginPath();
+                ctx.arc(x, y, Math.max(size, 0.5), 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(74, 144, 226, ${0.3 + Math.sin(Date.now() * 0.003 + index) * 0.2})`;
+                ctx.fill();
+                
+                // Add glow effect
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = 'rgba(74, 144, 226, 0.5)';
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Counter animation
+        const counters = document.querySelectorAll('.stat-number');
+        const speed = 200;
+
+        const animateCounter = (counter) => {
+            const target = +counter.getAttribute('data-target');
+            const count = +counter.innerText;
+            const inc = target / speed;
+
+            if (count < target) {
+                counter.innerText = Math.ceil(count + inc);
+                setTimeout(() => animateCounter(counter), 1);
+            } else {
+                counter.innerText = target;
+            }
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                }
+            });
+        });
+
+        counters.forEach(counter => observer.observe(counter));
+
+        // Interactive Features
+        let quizQuestions = [
+            {
+                question: "What does UNGA stand for?",
+                options: ["United Nations General Assembly", "United Nations Global Alliance", "United Nations Governance Act", "United Nations Global Assembly"],
+                answer: 0
+            },
+            {
+                question: "What is the primary function of the UN Security Council?",
+                options: ["Economic development", "Maintaining international peace and security", "Human rights monitoring", "Environmental protection"],
+                answer: 1
+            },
+            {
+                question: "What does 'veto power' mean in the UN context?",
+                options: ["The ability to propose resolutions", "The ability to block resolutions", "The ability to amend resolutions", "The ability to vote on resolutions"],
+                answer: 1
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function startQuiz() {
+            document.getElementById('quiz-container').style.display = 'block';
+            currentQuestion = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestion < quizQuestions.length) {
+                let q = quizQuestions[currentQuestion];
+                document.getElementById('question').innerHTML = `<h4>${q.question}</h4>`;
+                let optionsHtml = '';
+                q.options.forEach((option, index) => {
+                    optionsHtml += `<button onclick="checkAnswer(${index})">${option}</button>`;
+                });
+                document.getElementById('options').innerHTML = optionsHtml;
+                document.getElementById('next-btn').style.display = 'none';
+            } else {
+                document.getElementById('question').innerHTML = `<h4>Quiz Complete! Your score: ${score}/${quizQuestions.length}</h4>`;
+                document.getElementById('options').innerHTML = '';
+                document.getElementById('next-btn').style.display = 'none';
+            }
+        }
+
+        function checkAnswer(selected) {
+            if (selected === quizQuestions[currentQuestion].answer) {
+                score++;
+                alert('Correct!');
+            } else {
+                alert('Incorrect. The correct answer is: ' + quizQuestions[currentQuestion].options[quizQuestions[currentQuestion].answer]);
+            }
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            showQuestion();
+        }
+
+        function openBuilder() {
+            document.getElementById('builder-container').style.display = 'block';
+        }
+
+        function generateResolution() {
+            let title = document.getElementById('res-title').value;
+            let preamble = document.getElementById('preamble').value;
+            let operative = document.getElementById('operative').value;
+            let resolution = `UNITED NATIONS\n\n${title}\n\nPREAMBLE\n${preamble}\n\nOPERATIVE CLAUSES\n${operative}`;
+            document.getElementById('resolution-output').innerText = resolution;
+        }
+
+        function openBadgeCreator() {
+            document.getElementById('badge-container').style.display = 'block';
+        }
+
+        function generateBadge() {
+            let name = document.getElementById('delegate-name').value;
+            let country = document.getElementById('country-select').value;
+            let committee = document.getElementById('committee-select').value;
+            let canvas = document.getElementById('badge-canvas');
+            let ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Background
+            ctx.fillStyle = '#001f3f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Border
+            ctx.strokeStyle = '#4a90e2';
+            ctx.lineWidth = 5;
+            ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+            
+            // Text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('BBPS MUN 2025', canvas.width / 2, 50);
+            ctx.fillText('Delegate Badge', canvas.width / 2, 80);
+            ctx.fillText(`Name: ${name}`, canvas.width / 2, 120);
+            ctx.fillText(`Country: ${country}`, canvas.width / 2, 150);
+            ctx.fillText(`Committee: ${committee}`, canvas.width / 2, 180);
+        }
+
+        function startSimulator() {
+            document.getElementById('simulator-container').style.display = 'block';
+        }
+
+        function chooseStance(stance) {
+            document.getElementById('debate-output').innerText = `You chose to argue ${stance} the topic. Prepare your opening statement!`;
+        }
+
+        function submitArgument() {
+            let argument = document.getElementById('user-argument').value;
+            document.getElementById('debate-output').innerText += `\n\nYour argument: ${argument}\n\nChair: Thank you for your contribution. The debate continues...`;
+            document.getElementById('user-argument').value = '';
+        }
+    </script>
+</body>
+</html>
