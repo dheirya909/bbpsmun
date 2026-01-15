@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBPS MUN 2025 - Confluence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #001f3f;
+            --light-navy: #003d7a;
+            --white: #ffffff;
+            --light-blue: #e8f4f8;
+            --accent: #4a90e2;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--light-navy) 100%);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, var(--white) 2px, var(--white) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, var(--white) 2px, var(--white) 4px);
+            animation: patternMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes patternMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 31, 63, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: '🌐';
+            font-size: 2rem;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            animation: fadeInUp 1s ease-out;
+            text-shadow: 0 0 30px rgba(74, 144, 226, 0.5);
+        }
+
+        .hero .subtitle {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+            color: var(--accent);
+        }
+
+        .hero .theme {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.4s backwards;
+            font-style: italic;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #globe-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+        }
+
+        .stats-container {
+            position: relative;
+            padding: 5rem 2rem;
+            background: rgba(0, 61, 122, 0.3);
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(0, 31, 63, 0.3) 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(74, 144, 226, 0.1), transparent);
+            animation: hologram 3s linear infinite;
+        }
+
+        @keyframes hologram {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(74, 144, 226, 0.3);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--accent);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .committee-section {
+            padding: 5rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .committee-cards {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .committee-card {
+            background: linear-gradient(135deg, var(--navy), var(--light-navy));
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .committee-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .committee-card:hover::before {
+            left: 100%;
+        }
+
+        .committee-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .committee-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .committee-agenda {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .executive-board {
+            padding: 5rem 2rem;
+            background: rgba(0, 31, 63, 0.4);
+        }
+
+        .board-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .board-card {
+            background: rgba(74, 144, 226, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s;
+        }
+
+        .board-card:hover {
+            background: rgba(74, 144, 226, 0.2);
+            transform: translateX(10px);
+        }
+
+        .board-committee {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .board-position {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .board-name {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .awards-section {
+            padding: 5rem 2rem;
+        }
+
+        .awards-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .award-committee {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(0, 31, 63, 0.4));
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid var(--accent);
+        }
+
+        .award-committee h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .award-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .award-item:hover {
+            background: rgba(74, 144, 226, 0.2);
+        }
+
+        .award-category {
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .timeline-section {
+            padding: 5rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .timeline-item {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+            text-align: left;
+        }
+
+        .timeline-content {
+            background: rgba(74, 144, 226, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            width: 45%;
+            border: 1px solid var(--accent);
+            position: relative;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 4px solid var(--navy);
+            animation: dotPulse 2s infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(74, 144, 226, 0); }
+        }
+
+        .secretariat-section {
+            padding: 5rem 2rem;
+            background: rgba(0, 61, 122, 0.3);
+        }
+
+        .secretariat-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .secretariat-card {
+            background: rgba(74, 144, 226, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            transition: all 0.3s;
+        }
+
+        .secretariat-card:hover {
+            background: rgba(74, 144, 226, 0.2);
+            transform: scale(1.05);
+        }
+
+        .gallery-section {
+            padding: 5rem 2rem;
+        }
+
+        .gallery-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.2), rgba(0, 31, 63, 0.4));
+            border-radius: 10px;
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        footer {
+            background: var(--navy);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 2px solid var(--accent);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--accent);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 1rem;
+        }
+
+        .cta-button:hover {
+            background: var(--white);
+            color: var(--navy);
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.5);
+        }
+
+        .quote-section {
+            padding: 4rem 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .quote-box {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.5rem;
+            font-style: italic;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .quote-box::before {
+            content: '"';
+            font-size: 4rem;
+            position: absolute;
+            left: -30px;
+            top: -20px;
+            color: var(--accent);
+        }
+
+        .quote-author {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            color: var(--accent);
+            font-style: normal;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero .subtitle { font-size: 1.5rem; }
+            .nav-links { flex-direction: column; gap: 1rem; }
+            .timeline-content { width: 80%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+
+    <nav>
+        <div class="nav-content">
+            <div class="logo">BBPS MUN 2025</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#stats">Highlights</a></li>
+                <li><a href="#committees">Committees</a></li>
+                <li><a href="#board">Executive Board</a></li>
+                <li><a href="#awards">Awards</a></li>
+                <li><a href="#secretariat">Secretariat</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <canvas id="globe-canvas"></canvas>
+        <div class="hero-content">
+            <h1>BBPS MUN 2025</h1>
+            <div class="subtitle">Confluence</div>
+            <div class="theme">"Voices of Today, Policies for Tomorrow"</div>
+            <p>8th & 9th October 2024 | 15th Edition</p>
+        </div>
+    </section>
+
+    <section class="quote-section">
+        <div class="quote-box">
+            We may have different religions, different languages, different colored skin, but we all belong to one human race.
+            <div class="quote-author">— Kofi Annan</div>
+        </div>
+    </section>
+
+    <section class="stats-container" id="stats">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" data-target="150">0</div>
+                <div class="stat-label">Delegates</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="4">0</div>
+                <div class="stat-label">Committees</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="15">0</div>
+                <div class="stat-label">Edition</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="2">0</div>
+                <div class="stat-label">Days</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="committee-section" id="committees">
+        <h2 class="section-title">Committees</h2>
+        <div class="committee-cards">
+            <div class="committee-card">
+                <h3 class="committee-title">UNGA-DISEC</h3>
+                <p class="committee-agenda"><strong>Agenda:</strong> Addressing Weaponisation of AI and Ensuring Ethical Use of Emerging Technologies in Warfare</p>
+                <p>The committee witnessed engaging debates on accountability in AI-enabled weapon systems, preventing misuse of autonomous technologies, and promoting frameworks for responsible innovation in defense sectors.</p>
+            </div>
+            <div class="committee-card">
+                <h3 class="committee-title">UNHRC</h3>
+                <p class="committee-agenda"><strong>Agenda:</strong> Protecting Human Rights and Accountability of States for Human Rights Abuses Against Minority & Indigenous Communities</p>
+                <p>Passionate discussions addressed systemic discrimination, marginalization, and state-led violations with solutions rooted in justice, equality, and international cooperation.</p>
+            </div>
+            <div class="committee-card">
+                <h3 class="committee-title">LOK SABHA</h3>
+                <p class="committee-agenda"><strong>Agenda:</strong> Formulation and Implementation of a Uniform Civil Code with Constitutional Compliance</p>
+                <p>Dynamic discussions on balancing uniformity in personal laws with respect for religious and cultural diversity, emphasizing gender equality and minority rights.</p>
+            </div>
+            <div class="committee-card">
+                <h3 class="committee-title">INTERNATIONAL PRESS</h3>
+                <p class="committee-agenda">Documenting proceedings, conducting interviews, and producing press releases with professionalism and creativity</p>
+                <p>Journalists, photographers, and caricaturists captured the spirit of debate and diplomacy throughout the conference.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="executive-board" id="board">
+        <h2 class="section-title">Executive Board</h2>
+        <div class="board-grid">
+            <div class="board-card">
+                <div class="board-committee">UNGA-DISEC</div>
+                <div class="board-position">Chairperson</div>
+                <div class="board-name">Srijan Sharma</div>
+            </div>
+            <div class="board-card">
+                <div class="board-committee">UNGA-DISEC</div>
+                <div class="board-position">Vice Chairperson</div>
+                <div class="board-name">Chetna Sabharwal</div>
+            </div>
+            <div class="board-card">
+                <div class="board-committee">UNGA-DISEC</div>
+                <div class="board-position">Rapporteur</div>
+                <div class="board-name">Ishaan Matta</div>
+            </div>
+            <div class="board-card">
+                <div class="board-committee">UNHRC</div>
+                <div class="board-position">Chairperson</div>
+                <div class="board-name">Prakrat Gupta</div>
+            </div>
+            <div class="board-card">
+                <div class="board-committee">UNHRC</div>
+                <div class="board-position">Co-Chairperson</div>
+                <div class="board-name">Vrinda Sharma</div>
+            </div>
+            <div class="board-card">
+                <div class="board-committee">UNHRC</div>
+                <div class="board-position">Rapporteur</div>
+                <div class="board-name">Anshika Aggarwal</div>
+            </div>
+            <div class="board-card">
+                <div class="board-committee">LOK SABHA</div>
+                <div class="board-position">Co-Moderator</div>
+                <div class="board-name">Jagrit Dubey</div>
+            </div>
+            <div class="board-card">
+                <div class="board-committee">LOK SABHA</div>
+                <div class="board-position">Co-Moderator</div>
+                <div class="board-name">Shubham Dubey</div>
+            </div>
+            <div class="board-card">
+                <div class="board-committee">LOK SABHA</div>
+                <div class="board-position">Scribe</div>
+                <div class="board-name">Anvi Gupta</div>
+            </div>
+            <div class="board-card">
+                <div class="board-committee">INTERNATIONAL PRESS</div>
+                <div class="board-position">Editor in Chief</div>
+                <div class="board-name">Reedim Gangwar</div>
+            </div>
+            <div class="board-card">
+                <div class="board-committee">INTERNATIONAL PRESS</div>
+                <div class="board-position">Photography Head</div>
+                <div class="board-name">Garv Wasson</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="awards-section" id="awards">
+        <h2 class="section-title">Roll of Honour</h2>
+        <div class="awards-grid">
+            <div class="award-committee">
+                <h3>UNGA-DISEC</h3>
+                <div class="award-item">
+                    <span class="award-category">Best Delegate</span>
+                    <span>Pakistan</span>
+                </div>
+                <div class="award-item">
+                    <span class="award-category">High Commendation</span>
+                    <span>USA</span>
+                </div>
+                <div class="award-item">
+                    <span class="award-category">Special Mention</span>
+                    <span>China</span>
+                </div>
+            </div>
+            <div class="award-committee">
+                <h3>UNHRC</h3>
+                <div class="award-item">
+                    <span class="award-category">Best Delegate</span>
+                    <span>Malta</span>
+                </div>
+                <div class="award-item">
+                    <span class="award-category">High Commendation</span>
+                    <span>Cambodia</span>
+                </div>
+                <div class="award-item">
+                    <span class="award-category">Special Mention</span>
+                    <span>Columbia</span>
+                </div>
+            </div>
+            <div class="award-committee">
+                <h3>LOK SABHA</h3>
+                <div class="award-item">
+                    <span class="award-category">Best Representative</span>
+                    <span>Sanvi Srijan</span>
+                </div>
+                <div class="award-item">
+                    <span class="award-category">High Commendation</span>
+                    <span>Dhritil Thapar</span>
+                </div>
+                <div class="award-item">
+                    <span class="award-category">Special Mention</span>
+                    <span>Aadhya Bansal</span>
+                </div>
+            </div>
+            <div class="award-committee">
+                <h3>INTERNATIONAL PRESS</h3>
+                <div class="award-item">
+                    <span class="award-category">Best Journalist</span>
+                    <span>Sharvi Chhabra</span>
+                </div>
+                <div class="award-item">
+                    <span class="award-category">Best Caricaturist</span>
+                    <span>Pratulya Devshi</span>
+                </div>
+                <div class="award-item">
+                    <span class="award-category">Best Photographer</span>
+                    <span>Sifat Kaur</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="timeline-section">
+        <h2 class="section-title">Conference Timeline</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3>Day 1 - 8th October</h3>
+                    <p>Opening ceremony, committee sessions begin with agenda setting, moderated caucuses, and initial position statements from all delegations.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3>Day 2 - 9th October</h3>
+                    <p>Continued deliberations, working paper development, resolution drafting, voting procedures, and closing ceremony with award presentations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="secretariat-section" id="secretariat">
+        <h2 class="section-title">Secretariat Team</h2>
+        <div class="secretariat-grid">
+            <div class="secretariat-card">Aarav Parashar</div>
+            <div class="secretariat-card">Smridhi Srivastava</div>
+            <div class="secretariat-card">Priyal Jain</div>
+            <div class="secretariat-card">Pranati Khattar</div>
+            <div class="secretariat-card">Sayma</div>
+            <div class="secretariat-card">Saanvi Sharma</div>
+            <div class="secretariat-card">Geet Khanna</div>
+            <div class="secretariat-card">Ayana Maheshwari</div>
+            <div class="secretariat-card">Dheirya Kharbanda</div>
+        </div>
+    </section>
+
+    <section class="gallery-section">
+        <h2 class="section-title">Conference Moments</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">📸</div>
+            <div class="gallery-item">🎤</div>
+            <div class="gallery-item">🌍</div>
+            <div class="gallery-item">🏆</div>
+            <div class="gallery-item">📰</div>
+            <div class="gallery-item">🤝</div>
+        </div>
+    </section>
+
+    <footer>
+        <h2>BBPS MUN 2025 - A Journey of Diplomacy & Leadership</h2>
+        <p>"Peace begins with us"</p>
+        <p style="margin-top: 2rem; opacity: 0.7;">Bal Bharati Public School, GRH Marg</p>
+        <p style="opacity: 0.7;">15th Edition | 8-9 October 2024</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('globe-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        let particles = [];
+        for (let i = 0; i < 100; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
